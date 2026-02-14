@@ -176,6 +176,78 @@
   })();
 </script>
 
+<script>
+  // Register image targets with XR8 before ECS pipeline starts
+  (function() {
+    function registerTargets() {
+      console.log('[IT] XR8 available, fetching image targets...');
+      fetch('/image-targets/image-targets.json')
+        .then(function(r) {
+          console.log('[IT] manifest status:', r.status);
+          return r.json();
+        })
+        .then(function(targets) {
+          console.log('[IT] Got ' + targets.length + ' target(s):', targets.map(function(t){return t.name}).join(', '));
+
+          // Configure XR8 with image target data
+          if (window.XR8 && window.XR8.XrController) {
+            var names = targets.map(function(t) { return t.name; });
+            console.log('[IT] Configuring XR8.XrController with targets:', names);
+            window.XR8.XrController.configure({ imageTargets: names });
+
+            // Also add as a pipeline module that provides image target data
+            window.XR8.addCameraPipelineModule({
+              name: 'image-target-loader',
+              onAttach: function() {
+                console.log('[IT] Pipeline module attached, adding targets');
+                targets.forEach(function(t) {
+                  console.log('[IT] Adding target:', t.name, t.type);
+                });
+              },
+              listeners: [
+                {
+                  event: 'reality.imagescanning',
+                  process: function(e) { console.log('[IT] imagescanning:', JSON.stringify(e.detail || e.data || e)); }
+                },
+                {
+                  event: 'reality.imageloading',
+                  process: function(e) { console.log('[IT] imageloading:', JSON.stringify(e.detail || e.data || e)); }
+                },
+                {
+                  event: 'reality.imagefound',
+                  process: function(e) { console.log('[IT] imagefound:', JSON.stringify(e.detail || e.data || e)); }
+                }
+              ]
+            });
+
+            // Try to pass image target data directly
+            try {
+              window.XR8.XrController.configure({
+                imageTargets: names,
+                imageTargetData: targets
+              });
+              console.log('[IT] XrController configured with imageTargetData');
+            } catch(e) {
+              console.warn('[IT] configure with imageTargetData failed:', e.message || e);
+            }
+          } else {
+            console.error('[IT] XR8.XrController not available!');
+          }
+        })
+        .catch(function(err) {
+          console.error('[IT] Failed to load image targets:', err);
+        });
+    }
+
+    if (window.XR8) {
+      registerTargets();
+    } else {
+      console.log('[IT] Waiting for XR8 to load...');
+      window.addEventListener('xrloaded', registerTargets);
+    }
+  })();
+</script>
+
 <script src="bundle.js"></script>
 
 <script>
