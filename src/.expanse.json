@@ -45,7 +45,7 @@
     "nose-bridge-001": {
       "id": "nose-bridge-001",
       "name": "noseBridge",
-      "position": [-1.916234778674137, -0.036883000284433365, 0.62990802526474],
+      "position": [0.02153898910695662, 0.003303661572314362, 0.6456527929169873],
       "rotation": [0, 0, 0, 1],
       "scale": [1, 1, 1],
       "geometry": null,
@@ -88,8 +88,8 @@
     "coffeebag-001": {
       "id": "coffeebag-001",
       "name": "Coffeebag.glb",
-      "position": [0.72, -0.376, 0],
-      "rotation": [0, 0, 0, 1],
+      "position": [-1.2401301981500759, -0.0908985869228106, -0.35387849506221186],
+      "rotation": [0, 0.7287744026626197, 0, 0.684753875508377],
       "scale": [1, 1, 1],
       "geometry": null,
       "material": null,
@@ -119,8 +119,8 @@
     "maple-syrup-001": {
       "id": "maple-syrup-001",
       "name": "maple_syrup.glb",
-      "position": [3.135, -0.297, 0],
-      "rotation": [0, 0, 0, 1],
+      "position": [1.2490936340990164, -0.01175186557653439, -0.4903463811546254],
+      "rotation": [0, -0.33392613889895817, 0, 0.9425992434539896],
       "scale": [1, 1, 1],
       "geometry": null,
       "material": null,
@@ -149,7 +149,7 @@
     "pasta-sauce-001": {
       "id": "pasta-sauce-001",
       "name": "pasta_sauce.glb",
-      "position": [1.904, -1.306, 1.943],
+      "position": [0.9712162106759947, -0.8032346806076239, 0.5721895038937699],
       "rotation": [0, 0, 0, 1],
       "scale": [1, 1, 1],
       "geometry": null,
@@ -179,12 +179,12 @@
     "chef-hat-001": {
       "id": "chef-hat-001",
       "name": "chef_hat.glb",
-      "position": [0.008, 2.979, -0.095],
-      "rotation": [-0.0241, 0, 0, 0.9997],
-      "scale": [2, 2, 2],
+      "position": [-0.01838460310078749, 1.0442588337257526, -0.7618541858610945],
+      "rotation": [-0.04694013420150849, 0, 0, 0.9988977043727474],
+      "scale": [2.2, 2.2, 2.2],
       "geometry": null,
       "material": null,
-      "parentId": "space-face-filter",
+      "parentId": "nose-bridge-001",
       "components": {},
       "gltfModel": {
         "src": {

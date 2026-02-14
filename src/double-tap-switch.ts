@@ -6,6 +6,7 @@ declare global {
     __dtState?: {
       isFaceMode: boolean
       lastTapTime: number
+      switchedAt: number
       listenerAttached: boolean
     }
   }
@@ -26,12 +27,14 @@ ecs.registerComponent({
       window.__dtState = {
         isFaceMode: true,
         lastTapTime: 0,
+        switchedAt: 0,
         listenerAttached: false,
       }
     }
 
     const state = window.__dtState
     const DOUBLE_TAP_THRESHOLD = 400
+    const SWITCH_COOLDOWN = 1500  // ignore taps for 1.5s after switching
 
     // Update label to reflect current state
     const labelText = state.isFaceMode
@@ -45,12 +48,20 @@ ecs.registerComponent({
 
     const onTap = () => {
       const now = Date.now()
+
+      // Ignore taps during cooldown after a space switch
+      // (prevents permission dialog "Allow" tap from triggering a switch back)
+      if (now - state.switchedAt < SWITCH_COOLDOWN) {
+        state.lastTapTime = 0
+        return
+      }
+
       if (now - state.lastTapTime < DOUBLE_TAP_THRESHOLD) {
         state.isFaceMode = !state.isFaceMode
         const targetSpace = state.isFaceMode ? faceSpace : arSpace
 
-        // Small delay so the label updates after space loads
         state.lastTapTime = 0
+        state.switchedAt = now
         world.spaces.loadSpace(targetSpace)
       } else {
         state.lastTapTime = now
