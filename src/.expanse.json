@@ -215,6 +215,68 @@
       "order": -4
     },
 
+    "mode-switch-face": {
+      "id": "mode-switch-face",
+      "name": "Mode Switch Face",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "components": {
+        "comp-dt-face": {
+          "id": "comp-dt-face",
+          "name": "double-tap-switch",
+          "parameters": {
+            "faceSpace": "Face Filter",
+            "arSpace": "AR Camera",
+            "modeLabel": {
+              "type": "entity",
+              "id": "mode-label-face"
+            }
+          }
+        }
+      },
+      "ui": {
+        "type": "overlay",
+        "width": "100%",
+        "height": 50,
+        "position": "absolute",
+        "bottom": 30,
+        "left": 0,
+        "flexDirection": "column",
+        "alignItems": "center",
+        "justifyContent": "center"
+      },
+      "parentId": "space-face-filter",
+      "order": 10
+    },
+
+    "mode-label-face": {
+      "id": "mode-label-face",
+      "name": "Mode Label Face",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "mode-switch-face",
+      "components": {},
+      "ui": {
+        "width": 200,
+        "height": 30,
+        "text": "Double-tap to enter Sauce Story",
+        "color": "#ffffff",
+        "fontSize": 12,
+        "textAlign": "center",
+        "verticalTextAlign": "center",
+        "background": "#000000",
+        "backgroundOpacity": 0.6,
+        "borderRadius": 15
+      },
+      "order": 0
+    },
+
     "cam-world-001": {
       "id": "cam-world-001",
       "name": "Camera",
@@ -284,7 +346,7 @@
       "parentId": "space-ar-camera",
       "components": {},
       "imageTarget": {
-        "name": "Pasta_Label(test)"
+        "name": "Pasta_Label_test"
       },
       "order": 3
     },
@@ -303,7 +365,7 @@
           "id": "comp-found-audio",
           "name": "image-found-audio",
           "parameters": {
-            "imageTargetName": "Pasta_Label(test)"
+            "imageTargetName": "Pasta_Label_test"
           }
         }
       },
@@ -409,24 +471,24 @@
       "order": 1
     },
 
-    "mode-switch-entity": {
-      "id": "mode-switch-entity",
-      "name": "Mode Switch",
+    "mode-switch-ar": {
+      "id": "mode-switch-ar",
+      "name": "Mode Switch AR",
       "position": [0, 0, 0],
       "rotation": [0, 0, 0, 1],
       "scale": [1, 1, 1],
       "geometry": null,
       "material": null,
       "components": {
-        "comp-double-tap-001": {
-          "id": "comp-double-tap-001",
+        "comp-dt-ar": {
+          "id": "comp-dt-ar",
           "name": "double-tap-switch",
           "parameters": {
             "faceSpace": "Face Filter",
             "arSpace": "AR Camera",
             "modeLabel": {
               "type": "entity",
-              "id": "mode-label-001"
+              "id": "mode-label-ar"
             }
           }
         }
@@ -442,19 +504,19 @@
         "alignItems": "center",
         "justifyContent": "center"
       },
-      "parentId": "space-overlay",
-      "order": 0
+      "parentId": "space-ar-camera",
+      "order": 10
     },
 
-    "mode-label-001": {
-      "id": "mode-label-001",
-      "name": "Mode Label",
+    "mode-label-ar": {
+      "id": "mode-label-ar",
+      "name": "Mode Label AR",
       "position": [0, 0, 0],
       "rotation": [0, 0, 0, 1],
       "scale": [1, 1, 1],
       "geometry": null,
       "material": null,
-      "parentId": "mode-switch-entity",
+      "parentId": "mode-switch-ar",
       "components": {},
       "ui": {
         "width": 200,
@@ -477,7 +539,7 @@
       "id": "space-face-filter",
       "name": "Face Filter",
       "activeCamera": "cam-face-001",
-      "includedSpaces": ["space-overlay"],
+      "includedSpaces": [],
       "reflections": {
         "type": "url",
         "url": "https://cdn.8thwall.com/web/assets/envmap/basic_env_map-m9hqpneh.jpg"
@@ -487,15 +549,11 @@
       "id": "space-ar-camera",
       "name": "AR Camera",
       "activeCamera": "cam-world-001",
-      "includedSpaces": ["space-overlay"],
+      "includedSpaces": [],
       "reflections": {
         "type": "url",
         "url": "https://cdn.8thwall.com/web/assets/envmap/basic_env_map-m9hqpneh.jpg"
       }
-    },
-    "space-overlay": {
-      "id": "space-overlay",
-      "name": "Mode Switch Overlay"
     }
   },
 

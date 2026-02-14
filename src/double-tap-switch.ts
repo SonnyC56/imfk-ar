@@ -34,6 +34,7 @@ ecs.registerComponent({
     const DOUBLE_TAP_THRESHOLD = 400
     const SWITCH_COOLDOWN = 1500
 
+    // Update label for this space's instance
     const labelText = state.isFaceMode
       ? 'Double-tap to enter Sauce Story'
       : 'Double-tap for Face Filter'

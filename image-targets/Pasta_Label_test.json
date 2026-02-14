@@ -1,6 +1,6 @@
 {
-  "imagePath": "image-targets/Pasta_Label(test)_target.png",
-  "name": "Pasta_Label(test)",
+  "imagePath": "image-targets/Pasta_Label_test_target.png",
+  "name": "Pasta_Label_test",
   "type": "CYLINDER",
   "properties": {
     "top": 531,
