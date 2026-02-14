@@ -1,0 +1,26 @@
+[
+  {
+    "imagePath": "image-targets/Pasta_Label_test_target.png",
+    "name": "Pasta_Label_test",
+    "type": "CYLINDER",
+    "properties": {
+      "top": 531,
+      "left": 0,
+      "width": 614,
+      "height": 819,
+      "isRotated": true,
+      "originalWidth": 614,
+      "originalHeight": 2000,
+      "cylinderCircumferenceTop": 100,
+      "cylinderCircumferenceBottom": 100,
+      "targetCircumferenceTop": 100,
+      "cylinderSideLength": 30.7,
+      "inputMode": "BASIC",
+      "coniness": 0,
+      "arcAngle": 360,
+      "unit": "mm"
+    },
+    "userMetadataIsJson": true,
+    "loadAutomatically": true
+  }
+]

@@ -51,6 +51,11 @@ const config = {
           to: path.join(distPath, 'image-targets'),
           noErrorOnMissing: true,
         },
+        {
+          from: path.join(rootPath, 'image-targets.json'),
+          to: path.join(distPath, 'image-targets.json'),
+          noErrorOnMissing: true,
+        },
       ],
     }),
     createVirtualEntryPlugin({
@@ -74,6 +79,9 @@ const config = {
     compress: true,
     hot: true,
     liveReload: false,
+    host: '0.0.0.0',
+    server: 'https',
+    allowedHosts: 'all',
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
