@@ -1,0 +1,547 @@
+{
+  "objects": {
+    "cam-face-001": {
+      "id": "cam-face-001",
+      "name": "Face Camera",
+      "position": [0, 2, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "components": {},
+      "parentId": "space-face-filter",
+      "camera": {
+        "type": "perspective",
+        "xr": {
+          "xrCameraType": "face",
+          "phone": "AR",
+          "desktop": "AR",
+          "headset": "disabled",
+          "face": {
+            "mirroredDisplay": true
+          }
+        }
+      },
+      "order": -10
+    },
+
+    "face-entity-001": {
+      "id": "face-entity-001",
+      "name": "Face",
+      "position": [0, 2, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "components": {},
+      "face": {
+        "id": 1,
+        "addAttachmentState": false
+      },
+      "parentId": "space-face-filter",
+      "order": -2
+    },
+
+    "nose-bridge-001": {
+      "id": "nose-bridge-001",
+      "name": "noseBridge",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "face-entity-001",
+      "components": {
+        "comp-face-attach-001": {
+          "id": "comp-face-attach-001",
+          "name": "face-attachment",
+          "parameters": {
+            "point": "noseBridge"
+          }
+        }
+      },
+      "order": 1
+    },
+
+    "occluder-001": {
+      "id": "occluder-001",
+      "name": "Occluder",
+      "position": [0, 0, 0],
+      "rotation": [0, -1, 0, 6.123233995736766e-17],
+      "scale": [1, 1, 1],
+      "material": {
+        "type": "hider"
+      },
+      "parentId": "face-entity-001",
+      "components": {},
+      "gltfModel": {
+        "src": {
+          "type": "asset",
+          "asset": "assets/default/head-occluder.glb"
+        },
+        "animationClip": "",
+        "loop": true
+      },
+      "order": 2
+    },
+
+    "coffeebag-001": {
+      "id": "coffeebag-001",
+      "name": "Coffeebag.glb",
+      "position": [0.72, -0.376, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "nose-bridge-001",
+      "components": {
+        "comp-rotate-coffee": {
+          "id": "comp-rotate-coffee",
+          "name": "rotate-animation",
+          "parameters": {
+            "toY": 360,
+            "shortestPath": false,
+            "duration": 3000
+          }
+        }
+      },
+      "gltfModel": {
+        "src": {
+          "type": "asset",
+          "asset": "assets/Coffeebag.glb"
+        },
+        "animationClip": "",
+        "loop": true
+      },
+      "order": 3
+    },
+
+    "maple-syrup-001": {
+      "id": "maple-syrup-001",
+      "name": "maple_syrup.glb",
+      "position": [3.135, -0.297, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "nose-bridge-001",
+      "components": {
+        "comp-rotate-maple": {
+          "id": "comp-rotate-maple",
+          "name": "rotate-animation",
+          "parameters": {
+            "toY": 360,
+            "duration": 3000
+          }
+        }
+      },
+      "gltfModel": {
+        "src": {
+          "type": "asset",
+          "asset": "assets/maple_syrup.glb"
+        },
+        "animationClip": "",
+        "loop": true
+      },
+      "order": 4
+    },
+
+    "pasta-sauce-001": {
+      "id": "pasta-sauce-001",
+      "name": "pasta_sauce.glb",
+      "position": [1.904, -1.306, 1.943],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "nose-bridge-001",
+      "components": {
+        "comp-rotate-pasta": {
+          "id": "comp-rotate-pasta",
+          "name": "rotate-animation",
+          "parameters": {
+            "toY": 360,
+            "duration": 3000
+          }
+        }
+      },
+      "gltfModel": {
+        "src": {
+          "type": "asset",
+          "asset": "assets/pasta_sauce.glb"
+        },
+        "animationClip": "",
+        "loop": true
+      },
+      "order": 5
+    },
+
+    "chef-hat-001": {
+      "id": "chef-hat-001",
+      "name": "chef_hat.glb",
+      "position": [0.008, 2.979, -0.095],
+      "rotation": [-0.0241, 0, 0, 0.9997],
+      "scale": [2, 2, 2],
+      "geometry": null,
+      "material": null,
+      "parentId": "space-face-filter",
+      "components": {},
+      "gltfModel": {
+        "src": {
+          "type": "asset",
+          "asset": "assets/chef_hat.glb"
+        },
+        "animationClip": "",
+        "loop": true
+      },
+      "order": -1
+    },
+
+    "dir-light-face-001": {
+      "id": "dir-light-face-001",
+      "name": "Directional Light",
+      "position": [10, 10, 10],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "components": {},
+      "light": {
+        "type": "directional",
+        "intensity": 0.7,
+        "castShadow": false
+      },
+      "parentId": "space-face-filter",
+      "order": -4
+    },
+
+    "cam-world-001": {
+      "id": "cam-world-001",
+      "name": "Camera",
+      "position": [0, 5, 5],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "components": {},
+      "parentId": "space-ar-camera",
+      "camera": {
+        "type": "perspective",
+        "xr": {
+          "xrCameraType": "world",
+          "phone": "AR",
+          "desktop": "disabled",
+          "headset": "AR",
+          "world": {
+            "disableWorldTracking": false
+          }
+        }
+      },
+      "order": -10
+    },
+
+    "ambient-light-ar-001": {
+      "id": "ambient-light-ar-001",
+      "name": "Ambient Light",
+      "position": [10, 5, 5],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "components": {},
+      "light": {
+        "type": "ambient"
+      },
+      "parentId": "space-ar-camera",
+      "order": 0
+    },
+
+    "dir-light-ar-001": {
+      "id": "dir-light-ar-001",
+      "name": "Directional Light",
+      "position": [20, 20, 10],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "components": {},
+      "light": {
+        "type": "directional",
+        "intensity": 1
+      },
+      "parentId": "space-ar-camera",
+      "order": 1
+    },
+
+    "image-target-001": {
+      "id": "image-target-001",
+      "name": "Image Target",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [0.5, 0.5, 0.5],
+      "geometry": null,
+      "material": null,
+      "parentId": "space-ar-camera",
+      "components": {
+        "comp-on-found-001": {
+          "id": "comp-on-found-001",
+          "name": "image-found-handler",
+          "parameters": {
+            "imageTargetName": "Pasta_Label(test)",
+            "tapOverlay": {
+              "type": "entity",
+              "id": "tap-overlay-001"
+            }
+          }
+        }
+      },
+      "imageTarget": {
+        "name": "Pasta_Label(test)"
+      },
+      "order": 3
+    },
+
+    "animation-001": {
+      "id": "animation-001",
+      "name": "Animation",
+      "position": [-0.021, 1.596, -0.0001],
+      "rotation": [0.00007, -0.00104, -0.000006, 1.0],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "image-target-001",
+      "components": {},
+      "gltfModel": {
+        "src": {
+          "type": "asset",
+          "asset": "assets/Animtaion.glb"
+        },
+        "animationClip": "*",
+        "loop": true
+      },
+      "order": 4
+    },
+
+    "audio-button-001": {
+      "id": "audio-button-001",
+      "name": "Button",
+      "position": [0.043, -0.411, 1.054],
+      "rotation": [-0.195, 0, 0, 0.981],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "image-target-001",
+      "components": {},
+      "ui": {
+        "type": "3d",
+        "width": 100,
+        "height": 36,
+        "background": "#90a0c5",
+        "borderRadius": 18,
+        "flexDirection": "row",
+        "backgroundOpacity": 0.5,
+        "padding": "10",
+        "gap": "6",
+        "alignItems": "center",
+        "justifyContent": "center"
+      },
+      "order": 5,
+      "audio": {
+        "src": {
+          "type": "asset",
+          "asset": "assets/The_Joy_of_It_All.mp3"
+        },
+        "loop": true
+      }
+    },
+
+    "audio-icon-001": {
+      "id": "audio-icon-001",
+      "name": "Icon",
+      "position": [-0.323, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "audio-button-001",
+      "components": {},
+      "ui": {
+        "width": 24,
+        "height": 24,
+        "image": {
+          "type": "asset",
+          "asset": "assets/Icon.png"
+        },
+        "backgroundOpacity": 1,
+        "backgroundSize": "contain"
+      },
+      "order": 0
+    },
+
+    "audio-text-001": {
+      "id": "audio-text-001",
+      "name": "Help our friends",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "audio-button-001",
+      "components": {},
+      "ui": {
+        "width": 50,
+        "height": 14,
+        "text": "DONATE TO HELP OUR FRIENDS\n",
+        "color": "#000000",
+        "fontSize": 8,
+        "textAlign": "center"
+      },
+      "order": 1
+    },
+
+    "tap-overlay-001": {
+      "id": "tap-overlay-001",
+      "name": "Tap Overlay",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "space-ar-camera",
+      "components": {},
+      "ui": {
+        "type": "overlay",
+        "width": "100%",
+        "height": "100%",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "background": "#000000",
+        "backgroundOpacity": 0.5
+      },
+      "order": 20,
+      "hidden": true
+    },
+
+    "tap-overlay-text-001": {
+      "id": "tap-overlay-text-001",
+      "name": "Tap Text",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "tap-overlay-001",
+      "components": {},
+      "ui": {
+        "width": 250,
+        "height": 40,
+        "text": "Tap to enable sound & place model",
+        "color": "#ffffff",
+        "fontSize": 18,
+        "textAlign": "center",
+        "verticalTextAlign": "center"
+      },
+      "order": 0
+    },
+
+    "mode-switch-entity": {
+      "id": "mode-switch-entity",
+      "name": "Mode Switch",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "components": {
+        "comp-double-tap-001": {
+          "id": "comp-double-tap-001",
+          "name": "double-tap-switch",
+          "parameters": {
+            "faceSpace": "Face Filter",
+            "arSpace": "AR Camera",
+            "modeLabel": {
+              "type": "entity",
+              "id": "mode-label-001"
+            }
+          }
+        }
+      },
+      "ui": {
+        "type": "overlay",
+        "width": "100%",
+        "height": 50,
+        "position": "absolute",
+        "bottom": 30,
+        "left": 0,
+        "flexDirection": "column",
+        "alignItems": "center",
+        "justifyContent": "center"
+      },
+      "parentId": "space-overlay",
+      "order": 0
+    },
+
+    "mode-label-001": {
+      "id": "mode-label-001",
+      "name": "Mode Label",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "mode-switch-entity",
+      "components": {},
+      "ui": {
+        "width": 200,
+        "height": 30,
+        "text": "Face Mode  \\u2022  Double-tap to switch",
+        "color": "#ffffff",
+        "fontSize": 12,
+        "textAlign": "center",
+        "verticalTextAlign": "center",
+        "background": "#000000",
+        "backgroundOpacity": 0.6,
+        "borderRadius": 15
+      },
+      "order": 0
+    }
+  },
+
+  "spaces": {
+    "space-face-filter": {
+      "id": "space-face-filter",
+      "name": "Face Filter",
+      "activeCamera": "cam-face-001",
+      "includedSpaces": ["space-overlay"],
+      "reflections": {
+        "type": "url",
+        "url": "https://cdn.8thwall.com/web/assets/envmap/basic_env_map-m9hqpneh.jpg"
+      }
+    },
+    "space-ar-camera": {
+      "id": "space-ar-camera",
+      "name": "AR Camera",
+      "activeCamera": "cam-world-001",
+      "includedSpaces": ["space-overlay"],
+      "reflections": {
+        "type": "url",
+        "url": "https://cdn.8thwall.com/web/assets/envmap/basic_env_map-m9hqpneh.jpg"
+      }
+    },
+    "space-overlay": {
+      "id": "space-overlay",
+      "name": "Mode Switch Overlay",
+      "activeCamera": "cam-face-001"
+    }
+  },
+
+  "entrySpaceId": "space-face-filter",
+  "runtimeVersion": {
+    "type": "version",
+    "level": "major",
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+  }
+}
