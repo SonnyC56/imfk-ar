@@ -30,8 +30,8 @@ ecs.registerComponent({
     // Progress bar container (hidden initially)
     const barWrap = document.createElement('div')
     barWrap.style.cssText = [
-      'position:absolute;top:0;left:0;right:0;height:4px;',
-      'background:rgba(255,255,255,0.15);',
+      'position:absolute;top:0;left:0;right:0;height:5px;',
+      'background:rgba(255,255,255,0.2);',
       'opacity:0;transition:opacity 0.4s ease;',
     ].join('')
     overlay.appendChild(barWrap)
@@ -43,7 +43,6 @@ ecs.registerComponent({
       'background-size:200% 100%;',
       'animation:barShimmer 2s linear infinite;',
       'transform-origin:left;',
-      'transition:transform 0.3s linear;',
     ].join('')
     barWrap.appendChild(bar)
 
@@ -54,58 +53,79 @@ ecs.registerComponent({
 
     let found = false
     let rafId: number | null = null
+    let audioPollingId: ReturnType<typeof setInterval> | null = null
 
     // Listen for image found
     world.events.addListener(world.events.globalId, 'reality.imagefound', (e: any) => {
       const {name} = e.data as any
       if (name !== imageTargetName || found) return
       found = true
+      console.log('[scan-overlay] Image found! Starting progress bar')
 
       // Hide prompt, show progress bar
       prompt.style.opacity = '0'
       setTimeout(() => { prompt.style.display = 'none' }, 500)
       barWrap.style.opacity = '1'
 
-      // Start tracking audio progress
-      const startTime = Date.now()
+      // Poll for an active audio element — the ECS runtime creates <audio> tags
+      // but there may be a delay before it starts playing
+      let trackedAudio: HTMLAudioElement | null = null
+      let audioStartTime = Date.now()
 
-      // Try to get audio duration from the DOM audio element
-      const checkProgress = () => {
-        try {
-          // Find the audio element the ECS runtime created
-          const audios = document.querySelectorAll('audio')
-          let activeAudio: HTMLAudioElement | null = null
-          audios.forEach((a) => {
-            if (!a.paused && a.duration > 0) activeAudio = a
-          })
-
-          if (activeAudio) {
-            const progress = activeAudio.currentTime / activeAudio.duration
-            bar.style.transform = 'scaleX(' + (1 - progress) + ')'
-
-            if (progress >= 0.99) {
-              // Audio finished
-              barWrap.style.opacity = '0'
-              return
+      const updateBar = () => {
+        // Try to find the playing audio if we haven't yet
+        if (!trackedAudio) {
+          const audios = document.querySelectorAll('audio, video')
+          for (let i = 0; i < audios.length; i++) {
+            const a = audios[i] as HTMLAudioElement
+            if (!a.paused && a.duration > 0) {
+              trackedAudio = a
+              console.log('[scan-overlay] Found playing audio, duration:', a.duration.toFixed(1) + 's')
+              break
             }
           }
-        } catch (err) {
-          // ignore
         }
-        rafId = requestAnimationFrame(checkProgress)
+
+        if (trackedAudio && trackedAudio.duration > 0) {
+          const progress = trackedAudio.currentTime / trackedAudio.duration
+          bar.style.transform = 'scaleX(' + Math.max(0, 1 - progress).toFixed(4) + ')'
+
+          if (progress >= 0.99 || trackedAudio.paused) {
+            bar.style.transform = 'scaleX(0)'
+            setTimeout(() => { barWrap.style.opacity = '0' }, 300)
+            if (audioPollingId) clearInterval(audioPollingId)
+            return
+          }
+        }
+
+        rafId = requestAnimationFrame(updateBar)
       }
 
-      // Small delay for audio to start
-      setTimeout(() => {
-        rafId = requestAnimationFrame(checkProgress)
-      }, 300)
-    })
+      // Start polling immediately and also via rAF
+      rafId = requestAnimationFrame(updateBar)
 
-    // Cleanup on remove
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId)
-      overlay.remove()
-      style.remove()
-    }
+      // Also add ended listener once we find the audio
+      audioPollingId = setInterval(() => {
+        if (trackedAudio) {
+          clearInterval(audioPollingId!)
+          trackedAudio.addEventListener('ended', () => {
+            bar.style.transform = 'scaleX(0)'
+            setTimeout(() => { barWrap.style.opacity = '0' }, 300)
+            if (rafId) cancelAnimationFrame(rafId)
+          })
+          return
+        }
+        // Keep looking for audio elements
+        const audios = document.querySelectorAll('audio, video')
+        for (let i = 0; i < audios.length; i++) {
+          const a = audios[i] as HTMLAudioElement
+          if (a.src && a.src.indexOf('Music-VO') !== -1) {
+            trackedAudio = a
+            console.log('[scan-overlay] Found Music-VO audio element, paused:', a.paused)
+            break
+          }
+        }
+      }, 200)
+    })
   },
 })
