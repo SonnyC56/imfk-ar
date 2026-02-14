@@ -77,22 +77,8 @@ ecs.registerComponent({
     let playing = false
     let rafId: number | null = null
 
-    const startAudio = () => {
-      if (playing) return
-      playing = true
-
-      // Hide tap prompt, show progress bar
-      tapPrompt.style.opacity = '0'
-      tapPrompt.style.pointerEvents = 'none'
+    const runProgressBar = () => {
       barWrap.style.opacity = '1'
-
-      audio.play().then(() => {
-        console.log('[scan-overlay] Audio playing, duration:', audio.duration.toFixed(1) + 's')
-      }).catch((err) => {
-        console.warn('[scan-overlay] Audio play failed:', err)
-      })
-
-      // Animate progress bar
       const updateBar = () => {
         if (audio.duration > 0) {
           const progress = audio.currentTime / audio.duration
@@ -108,6 +94,43 @@ ecs.registerComponent({
         bar.style.transform = 'scaleX(0)'
         setTimeout(() => { barWrap.style.opacity = '0' }, 500)
         if (rafId) cancelAnimationFrame(rafId)
+      })
+    }
+
+    const startAudio = () => {
+      if (playing) return
+      playing = true
+      console.log('[scan-overlay] startAudio called (user tap)')
+
+      // Hide tap prompt, show progress bar
+      tapPrompt.style.opacity = '0'
+      tapPrompt.style.pointerEvents = 'none'
+
+      // Unlock AudioContext on this user gesture
+      try {
+        const AC = (window as any).AudioContext || (window as any).webkitAudioContext
+        if (AC) {
+          const ctx = new AC()
+          ctx.resume()
+        }
+      } catch (e) { /* ignore */ }
+
+      // Reset and play
+      audio.currentTime = 0
+      audio.load()
+      audio.play().then(() => {
+        console.log('[scan-overlay] Audio playing after tap, duration:', audio.duration.toFixed(1) + 's')
+        runProgressBar()
+      }).catch((err) => {
+        console.warn('[scan-overlay] Audio still failed after tap:', err)
+        // Last resort: recreate audio element
+        const audio2 = new Audio(audioSrc)
+        audio2.play().then(() => {
+          console.log('[scan-overlay] Fallback audio playing')
+          runProgressBar()
+        }).catch((err2) => {
+          console.error('[scan-overlay] All audio attempts failed:', err2)
+        })
       })
     }
 
