@@ -302,8 +302,7 @@
         "loop": false,
         "paused": true
       },
-      "order": 3,
-      "persistent": true
+      "order": 3
     },
 
     "animation-001": {
@@ -324,8 +323,7 @@
         "animationClip": "*",
         "loop": true
       },
-      "order": 4,
-      "persistent": true
+      "order": 4
     },
 
     "audio-button-001": {
@@ -351,8 +349,7 @@
         "alignItems": "center",
         "justifyContent": "center"
       },
-      "order": 5,
-      "persistent": true
+      "order": 5
     },
 
     "audio-icon-001": {
@@ -375,8 +372,7 @@
         "backgroundOpacity": 1,
         "backgroundSize": "contain"
       },
-      "order": 0,
-      "persistent": true
+      "order": 0
     },
 
     "audio-text-001": {
@@ -397,8 +393,7 @@
         "fontSize": 8,
         "textAlign": "center"
       },
-      "order": 1,
-      "persistent": true
+      "order": 1
     },
 
     "mode-switch-entity": {
@@ -451,7 +446,7 @@
       "ui": {
         "width": 200,
         "height": 30,
-        "text": "Face Mode  \\u2022  Double-tap to switch",
+        "text": "Double-tap to enter Sauce Story",
         "color": "#ffffff",
         "fontSize": 12,
         "textAlign": "center",
@@ -492,7 +487,7 @@
     }
   },
 
-  "entrySpaceId": "space-ar-camera",
+  "entrySpaceId": "space-face-filter",
   "runtimeVersion": {
     "type": "version",
     "level": "major",
