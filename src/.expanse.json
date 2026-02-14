@@ -499,6 +499,17 @@
               "id": "mode-label-ar"
             }
           }
+        },
+        "comp-scan-overlay": {
+          "id": "comp-scan-overlay",
+          "name": "scan-overlay",
+          "parameters": {
+            "imageTargetName": "Pasta_Label_test",
+            "audioEntity": {
+              "type": "entity",
+              "id": "scan-audio-001"
+            }
+          }
         }
       },
       "ui": {
