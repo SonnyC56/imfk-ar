@@ -8,6 +8,7 @@ declare global {
       lastTapTime: number
       switchedAt: number
       listenerAttached: boolean
+      initialized: boolean
     }
   }
 }
@@ -25,16 +26,28 @@ ecs.registerComponent({
     // Initialize global state once
     if (!window.__dtState) {
       window.__dtState = {
-        isFaceMode: true,
+        isFaceMode: false,  // starts in AR (entry space) then immediately switches
         lastTapTime: 0,
         switchedAt: 0,
         listenerAttached: false,
+        initialized: false,
       }
     }
 
     const state = window.__dtState
     const DOUBLE_TAP_THRESHOLD = 400
     const SWITCH_COOLDOWN = 1500
+
+    // On very first load, immediately switch to Face Filter.
+    // Entry space is AR Camera so the XR engine initializes image tracking,
+    // then we switch to face mode for the user's starting experience.
+    if (!state.initialized) {
+      state.initialized = true
+      state.isFaceMode = true
+      state.switchedAt = Date.now()
+      world.spaces.loadSpace(faceSpace)
+      return
+    }
 
     // Update label to reflect current state
     const labelText = state.isFaceMode
@@ -50,7 +63,6 @@ ecs.registerComponent({
 
     const onTap = (e: Event) => {
       // On touch devices, ignore mousedown (touchstart already fires).
-      // On desktop, ignore touchstart (only mousedown fires).
       if (hasTouchSupport && e.type === 'mousedown') return
       if (!hasTouchSupport && e.type === 'touchstart') return
 

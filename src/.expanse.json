@@ -286,7 +286,8 @@
       "imageTarget": {
         "name": "Pasta_Label(test)"
       },
-      "order": 3
+      "order": 3,
+      "persistent": true
     },
 
     "animation-001": {
@@ -307,12 +308,13 @@
         "animationClip": "*",
         "loop": true
       },
-      "order": 4
+      "order": 4,
+      "persistent": true
     },
 
     "audio-button-001": {
       "id": "audio-button-001",
-      "name": "Button",
+      "name": "Scan Audio Button",
       "position": [0.043, -0.411, 1.054],
       "rotation": [-0.195, 0, 0, 0.981],
       "scale": [1, 1, 1],
@@ -334,13 +336,7 @@
         "justifyContent": "center"
       },
       "order": 5,
-      "audio": {
-        "src": {
-          "type": "asset",
-          "asset": "assets/The_Joy_of_It_All.mp3"
-        },
-        "loop": true
-      }
+      "persistent": true
     },
 
     "audio-icon-001": {
@@ -363,7 +359,8 @@
         "backgroundOpacity": 1,
         "backgroundSize": "contain"
       },
-      "order": 0
+      "order": 0,
+      "persistent": true
     },
 
     "audio-text-001": {
@@ -384,7 +381,36 @@
         "fontSize": 8,
         "textAlign": "center"
       },
-      "order": 1
+      "order": 1,
+      "persistent": true
+    },
+
+    "bg-music-001": {
+      "id": "bg-music-001",
+      "name": "Background Music",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "space-face-filter",
+      "components": {
+        "comp-bg-music": {
+          "id": "comp-bg-music",
+          "name": "bg-music",
+          "parameters": {}
+        }
+      },
+      "audio": {
+        "src": {
+          "type": "asset",
+          "asset": "assets/The_Joy_of_It_All.mp3"
+        },
+        "loop": true,
+        "volume": 0.5
+      },
+      "order": -5,
+      "persistent": true
     },
 
     "mode-switch-entity": {
@@ -478,7 +504,7 @@
     }
   },
 
-  "entrySpaceId": "space-face-filter",
+  "entrySpaceId": "space-ar-camera",
   "runtimeVersion": {
     "type": "version",
     "level": "major",
