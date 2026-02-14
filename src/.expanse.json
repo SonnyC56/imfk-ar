@@ -351,34 +351,6 @@
       "order": 3
     },
 
-    "scan-audio-001": {
-      "id": "scan-audio-001",
-      "name": "Scan Audio",
-      "position": [0, 0, 0],
-      "rotation": [0, 0, 0, 1],
-      "scale": [1, 1, 1],
-      "geometry": null,
-      "material": null,
-      "parentId": "image-target-001",
-      "components": {
-        "comp-found-audio": {
-          "id": "comp-found-audio",
-          "name": "image-found-audio",
-          "parameters": {
-            "imageTargetName": "Pasta_Label_test"
-          }
-        }
-      },
-      "audio": {
-        "src": {
-          "type": "asset",
-          "asset": "assets/Music-VO_v1.mp3"
-        },
-        "loop": false,
-        "paused": true
-      },
-      "order": 3.5
-    },
 
     "animation-001": {
       "id": "animation-001",
@@ -505,10 +477,7 @@
           "name": "scan-overlay",
           "parameters": {
             "imageTargetName": "Pasta_Label_test",
-            "audioEntity": {
-              "type": "entity",
-              "id": "scan-audio-001"
-            }
+            "audioSrc": "./assets/Music-VO_v1.mp3"
           }
         }
       },

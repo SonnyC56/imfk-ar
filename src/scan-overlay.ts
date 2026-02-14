@@ -4,10 +4,10 @@ ecs.registerComponent({
   name: 'scan-overlay',
   schema: {
     imageTargetName: ecs.string,
-    audioEntity: ecs.eid,
+    audioSrc: ecs.string,
   },
   add: (world, component) => {
-    const {imageTargetName, audioEntity} = component.schema
+    const {imageTargetName, audioSrc} = component.schema
 
     // Create overlay container
     const overlay = document.createElement('div')
@@ -27,7 +27,21 @@ ecs.registerComponent({
     prompt.textContent = 'Scan the Sauce to begin'
     overlay.appendChild(prompt)
 
-    // Progress bar container (hidden initially)
+    // "Tap for sound" pill (hidden initially)
+    const tapPrompt = document.createElement('div')
+    tapPrompt.style.cssText = [
+      'text-align:center;margin:12px auto 0;width:fit-content;',
+      'padding:10px 24px;border-radius:24px;',
+      'background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);',
+      'color:#fff;font:600 15px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;',
+      'pointer-events:auto;cursor:pointer;',
+      'opacity:0;transition:opacity 0.4s ease;',
+      'animation:tapPulse 1.5s ease-in-out infinite;',
+    ].join('')
+    tapPrompt.textContent = 'Tap for sound'
+    overlay.appendChild(tapPrompt)
+
+    // Progress bar (hidden initially)
     const barWrap = document.createElement('div')
     barWrap.style.cssText = [
       'position:absolute;top:0;left:0;right:0;height:5px;',
@@ -46,86 +60,102 @@ ecs.registerComponent({
     ].join('')
     barWrap.appendChild(bar)
 
-    // Add shimmer animation
     const style = document.createElement('style')
-    style.textContent = '@keyframes barShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}'
+    style.textContent = [
+      '@keyframes barShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}',
+      '@keyframes tapPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}',
+    ].join('')
     document.head.appendChild(style)
 
+    // Preload the audio
+    const audio = new Audio()
+    audio.preload = 'auto'
+    audio.src = audioSrc
+    audio.playsInline = true
+
     let found = false
+    let playing = false
     let rafId: number | null = null
-    let audioPollingId: ReturnType<typeof setInterval> | null = null
+
+    const startAudio = () => {
+      if (playing) return
+      playing = true
+
+      // Hide tap prompt, show progress bar
+      tapPrompt.style.opacity = '0'
+      tapPrompt.style.pointerEvents = 'none'
+      barWrap.style.opacity = '1'
+
+      audio.play().then(() => {
+        console.log('[scan-overlay] Audio playing, duration:', audio.duration.toFixed(1) + 's')
+      }).catch((err) => {
+        console.warn('[scan-overlay] Audio play failed:', err)
+      })
+
+      // Animate progress bar
+      const updateBar = () => {
+        if (audio.duration > 0) {
+          const progress = audio.currentTime / audio.duration
+          bar.style.transform = 'scaleX(' + Math.max(0, 1 - progress).toFixed(4) + ')'
+        }
+        if (!audio.paused && !audio.ended) {
+          rafId = requestAnimationFrame(updateBar)
+        }
+      }
+      rafId = requestAnimationFrame(updateBar)
+
+      audio.addEventListener('ended', () => {
+        bar.style.transform = 'scaleX(0)'
+        setTimeout(() => { barWrap.style.opacity = '0' }, 500)
+        if (rafId) cancelAnimationFrame(rafId)
+      })
+    }
 
     // Listen for image found
     world.events.addListener(world.events.globalId, 'reality.imagefound', (e: any) => {
       const {name} = e.data as any
       if (name !== imageTargetName || found) return
       found = true
-      console.log('[scan-overlay] Image found! Starting progress bar')
+      console.log('[scan-overlay] Image found!')
 
-      // Hide prompt, show progress bar
+      // Hide scan prompt
       prompt.style.opacity = '0'
       setTimeout(() => { prompt.style.display = 'none' }, 500)
-      barWrap.style.opacity = '1'
 
-      // Poll for an active audio element — the ECS runtime creates <audio> tags
-      // but there may be a delay before it starts playing
-      let trackedAudio: HTMLAudioElement | null = null
-      let audioStartTime = Date.now()
+      // Try to autoplay first
+      audio.play().then(() => {
+        // Autoplay worked! Skip tap prompt, go straight to progress bar
+        playing = true
+        barWrap.style.opacity = '1'
+        console.log('[scan-overlay] Autoplay succeeded, duration:', audio.duration.toFixed(1) + 's')
 
-      const updateBar = () => {
-        // Try to find the playing audio if we haven't yet
-        if (!trackedAudio) {
-          const audios = document.querySelectorAll('audio, video')
-          for (let i = 0; i < audios.length; i++) {
-            const a = audios[i] as HTMLAudioElement
-            if (!a.paused && a.duration > 0) {
-              trackedAudio = a
-              console.log('[scan-overlay] Found playing audio, duration:', a.duration.toFixed(1) + 's')
-              break
-            }
+        const updateBar = () => {
+          if (audio.duration > 0) {
+            const progress = audio.currentTime / audio.duration
+            bar.style.transform = 'scaleX(' + Math.max(0, 1 - progress).toFixed(4) + ')'
+          }
+          if (!audio.paused && !audio.ended) {
+            rafId = requestAnimationFrame(updateBar)
           }
         }
-
-        if (trackedAudio && trackedAudio.duration > 0) {
-          const progress = trackedAudio.currentTime / trackedAudio.duration
-          bar.style.transform = 'scaleX(' + Math.max(0, 1 - progress).toFixed(4) + ')'
-
-          if (progress >= 0.99 || trackedAudio.paused) {
-            bar.style.transform = 'scaleX(0)'
-            setTimeout(() => { barWrap.style.opacity = '0' }, 300)
-            if (audioPollingId) clearInterval(audioPollingId)
-            return
-          }
-        }
-
         rafId = requestAnimationFrame(updateBar)
-      }
 
-      // Start polling immediately and also via rAF
-      rafId = requestAnimationFrame(updateBar)
+        audio.addEventListener('ended', () => {
+          bar.style.transform = 'scaleX(0)'
+          setTimeout(() => { barWrap.style.opacity = '0' }, 500)
+          if (rafId) cancelAnimationFrame(rafId)
+        })
+      }).catch(() => {
+        // Autoplay blocked — show tap prompt
+        console.log('[scan-overlay] Autoplay blocked, showing tap prompt')
+        tapPrompt.style.opacity = '1'
 
-      // Also add ended listener once we find the audio
-      audioPollingId = setInterval(() => {
-        if (trackedAudio) {
-          clearInterval(audioPollingId!)
-          trackedAudio.addEventListener('ended', () => {
-            bar.style.transform = 'scaleX(0)'
-            setTimeout(() => { barWrap.style.opacity = '0' }, 300)
-            if (rafId) cancelAnimationFrame(rafId)
-          })
-          return
-        }
-        // Keep looking for audio elements
-        const audios = document.querySelectorAll('audio, video')
-        for (let i = 0; i < audios.length; i++) {
-          const a = audios[i] as HTMLAudioElement
-          if (a.src && a.src.indexOf('Music-VO') !== -1) {
-            trackedAudio = a
-            console.log('[scan-overlay] Found Music-VO audio element, paused:', a.paused)
-            break
-          }
-        }
-      }, 200)
+        tapPrompt.addEventListener('click', startAudio)
+        tapPrompt.addEventListener('touchstart', (e) => {
+          e.stopPropagation()
+          startAudio()
+        }, {passive: true})
+      })
     })
   },
 })
