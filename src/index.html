@@ -177,6 +177,40 @@
 </script>
 
 <script>
+  // Unlock audio on first user tap so autoplay works later
+  (function() {
+    var unlocked = false;
+    function unlock() {
+      if (unlocked) return;
+      unlocked = true;
+      console.log('[AUDIO] Unlocking audio context on user gesture');
+
+      // Resume any existing AudioContext
+      if (window.AudioContext || window.webkitAudioContext) {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        ctx.resume().then(function() {
+          console.log('[AUDIO] AudioContext resumed');
+        });
+      }
+
+      // Play a silent buffer to unlock HTML5 audio
+      var a = document.createElement('audio');
+      a.setAttribute('playsinline', '');
+      a.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+      a.play().then(function() {
+        console.log('[AUDIO] Silent audio played, autoplay unlocked');
+        a.remove();
+      }).catch(function() {});
+
+      document.removeEventListener('touchstart', unlock, true);
+      document.removeEventListener('click', unlock, true);
+    }
+    document.addEventListener('touchstart', unlock, {capture: true, passive: true});
+    document.addEventListener('click', unlock, {capture: true});
+  })();
+</script>
+
+<script>
   // Register image targets with XR8 before ECS pipeline starts
   (function() {
     function registerTargets() {
