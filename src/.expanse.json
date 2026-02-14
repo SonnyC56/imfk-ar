@@ -263,16 +263,16 @@
       "parentId": "mode-switch-face",
       "components": {},
       "ui": {
-        "width": 200,
-        "height": 30,
+        "width": 280,
+        "height": 40,
         "text": "Double-tap to enter Sauce Story",
         "color": "#ffffff",
-        "fontSize": 12,
+        "fontSize": 16,
         "textAlign": "center",
         "verticalTextAlign": "center",
         "background": "#000000",
         "backgroundOpacity": 0.6,
-        "borderRadius": 15
+        "borderRadius": 20
       },
       "order": 0
     },
@@ -519,16 +519,16 @@
       "parentId": "mode-switch-ar",
       "components": {},
       "ui": {
-        "width": 200,
-        "height": 30,
+        "width": 280,
+        "height": 40,
         "text": "Double-tap for Face Filter",
         "color": "#ffffff",
-        "fontSize": 12,
+        "fontSize": 16,
         "textAlign": "center",
         "verticalTextAlign": "center",
         "background": "#000000",
         "backgroundOpacity": 0.6,
-        "borderRadius": 15
+        "borderRadius": 20
       },
       "order": 0
     }
