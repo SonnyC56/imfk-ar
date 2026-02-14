@@ -282,6 +282,22 @@
       "geometry": null,
       "material": null,
       "parentId": "space-ar-camera",
+      "components": {},
+      "imageTarget": {
+        "name": "Pasta_Label(test)"
+      },
+      "order": 3
+    },
+
+    "scan-audio-001": {
+      "id": "scan-audio-001",
+      "name": "Scan Audio",
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "geometry": null,
+      "material": null,
+      "parentId": "image-target-001",
       "components": {
         "comp-found-audio": {
           "id": "comp-found-audio",
@@ -291,9 +307,6 @@
           }
         }
       },
-      "imageTarget": {
-        "name": "Pasta_Label(test)"
-      },
       "audio": {
         "src": {
           "type": "asset",
@@ -302,7 +315,7 @@
         "loop": false,
         "paused": true
       },
-      "order": 3
+      "order": 3.5
     },
 
     "animation-001": {
@@ -482,8 +495,7 @@
     },
     "space-overlay": {
       "id": "space-overlay",
-      "name": "Mode Switch Overlay",
-      "activeCamera": "cam-face-001"
+      "name": "Mode Switch Overlay"
     }
   },
 

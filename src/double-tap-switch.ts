@@ -44,31 +44,6 @@ ecs.registerComponent({
 
     const hasTouchSupport = 'ontouchstart' in window
 
-    const switchSpace = (targetSpace: string, toFaceMode: boolean) => {
-      console.log('Switching to:', targetSpace, 'faceMode:', toFaceMode)
-      world.spaces.loadSpace(targetSpace)
-
-      // Reinitialize camera after space loads
-      setTimeout(() => {
-        try {
-          const camEid = world.camera.getActiveEid()
-          console.log('Active camera EID:', camEid)
-          if (toFaceMode) {
-            ecs.Camera.mutate(world, camEid, (c: any) => {
-              c.xrCameraType = 'face'
-            })
-          } else {
-            ecs.Camera.mutate(world, camEid, (c: any) => {
-              c.xrCameraType = 'world'
-              c.disableWorldTracking = false
-            })
-          }
-        } catch (err) {
-          console.warn('Camera reinit error:', err)
-        }
-      }, 200)
-    }
-
     const onTap = (e: Event) => {
       if (hasTouchSupport && e.type === 'mousedown') return
       if (!hasTouchSupport && e.type === 'touchstart') return
@@ -84,7 +59,8 @@ ecs.registerComponent({
         const targetSpace = state.isFaceMode ? faceSpace : arSpace
         state.lastTapTime = 0
         state.switchedAt = now
-        switchSpace(targetSpace, state.isFaceMode)
+        console.log('Double-tap switch to:', targetSpace)
+        world.spaces.loadSpace(targetSpace)
       } else {
         state.lastTapTime = now
       }
