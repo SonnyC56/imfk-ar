@@ -1,5 +1,16 @@
 import * as ecs from '@8thwall/ecs'
 
+declare global {
+  interface Window {
+    __dtState?: {
+      isFaceMode: boolean
+      lastTapTime: number
+      switchedAt: number
+      listenerAttached: boolean
+    }
+  }
+}
+
 ecs.registerComponent({
   name: 'double-tap-switch',
   schema: {
@@ -7,58 +18,55 @@ ecs.registerComponent({
     arSpace: ecs.string,
     modeLabel: ecs.eid,
   },
-  stateMachine: ({world, eid, schemaAttribute}) => {
-    const {faceSpace, arSpace, modeLabel} = schemaAttribute.get(eid)
+  add: (world, component) => {
+    const {faceSpace, arSpace, modeLabel} = component.schema
 
-    const DOUBLE_TAP_THRESHOLD = 400
-    const SWITCH_COOLDOWN = 1500
-    let lastTapTime = 0
-    let switchedAt = 0
-    let listenerAttached = false
-
-    const attachDoubleTapListener = () => {
-      if (listenerAttached) return
-      listenerAttached = true
-
-      const hasTouchSupport = 'ontouchstart' in window
-
-      const onTap = (e: Event) => {
-        if (hasTouchSupport && e.type === 'mousedown') return
-        if (!hasTouchSupport && e.type === 'touchstart') return
-
-        const now = Date.now()
-        if (now - switchedAt < SWITCH_COOLDOWN) {
-          lastTapTime = 0
-          return
-        }
-
-        if (now - lastTapTime < DOUBLE_TAP_THRESHOLD) {
-          lastTapTime = 0
-          switchedAt = now
-          world.events.dispatch(eid, 'double-tap', {})
-        } else {
-          lastTapTime = now
-        }
+    if (!window.__dtState) {
+      window.__dtState = {
+        isFaceMode: true,
+        lastTapTime: 0,
+        switchedAt: 0,
+        listenerAttached: false,
       }
-
-      document.addEventListener('touchstart', onTap, {passive: true})
-      document.addEventListener('mousedown', onTap)
     }
 
-    ecs.defineState('face')
-      .initial()
-      .onEnter(() => {
-        world.spaces.loadSpace(faceSpace)
-        ecs.Ui.set(world, modeLabel, {text: 'Double-tap to enter Sauce Story'})
-        attachDoubleTapListener()
-      })
-      .listen(eid, 'double-tap', () => 'ar')
+    const state = window.__dtState
+    const DOUBLE_TAP_THRESHOLD = 400
+    const SWITCH_COOLDOWN = 1500
 
-    ecs.defineState('ar')
-      .onEnter(() => {
-        world.spaces.loadSpace(arSpace)
-        ecs.Ui.set(world, modeLabel, {text: 'Double-tap for Face Filter'})
-      })
-      .listen(eid, 'double-tap', () => 'face')
+    const labelText = state.isFaceMode
+      ? 'Double-tap to enter Sauce Story'
+      : 'Double-tap for Face Filter'
+    ecs.Ui.set(world, modeLabel, {text: labelText})
+
+    if (state.listenerAttached) return
+    state.listenerAttached = true
+
+    const hasTouchSupport = 'ontouchstart' in window
+
+    const onTap = (e: Event) => {
+      if (hasTouchSupport && e.type === 'mousedown') return
+      if (!hasTouchSupport && e.type === 'touchstart') return
+
+      const now = Date.now()
+      if (now - state.switchedAt < SWITCH_COOLDOWN) {
+        state.lastTapTime = 0
+        return
+      }
+
+      if (now - state.lastTapTime < DOUBLE_TAP_THRESHOLD) {
+        state.isFaceMode = !state.isFaceMode
+        const targetSpace = state.isFaceMode ? faceSpace : arSpace
+        state.lastTapTime = 0
+        state.switchedAt = now
+        console.log('Double-tap switch to:', targetSpace)
+        world.spaces.loadSpace(targetSpace)
+      } else {
+        state.lastTapTime = now
+      }
+    }
+
+    document.addEventListener('touchstart', onTap, {passive: true})
+    document.addEventListener('mousedown', onTap)
   },
 })
