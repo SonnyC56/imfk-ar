@@ -7,6 +7,7 @@ declare global {
       lastTapTime: number
       switchedAt: number
       listenerAttached: boolean
+      needsInitialSwap: boolean
     }
   }
 }
@@ -23,10 +24,11 @@ ecs.registerComponent({
 
     if (!window.__dtState) {
       window.__dtState = {
-        isFaceMode: true,
+        isFaceMode: false,
         lastTapTime: 0,
         switchedAt: 0,
         listenerAttached: false,
+        needsInitialSwap: true,
       }
     }
 
@@ -34,11 +36,25 @@ ecs.registerComponent({
     const DOUBLE_TAP_THRESHOLD = 400
     const SWITCH_COOLDOWN = 1500
 
+    // Entry space is AR Camera (so XR engine initializes world tracking
+    // + image targets). On first add(), immediately swap to Face Filter.
+    // The loading overlay covers the brief rear-camera flash.
+    if (state.needsInitialSwap) {
+      state.needsInitialSwap = false
+      state.isFaceMode = true
+      state.switchedAt = Date.now()
+      console.log('Initial swap: AR Camera -> Face Filter')
+      world.spaces.loadSpace(faceSpace)
+      return
+    }
+
+    // Update label
     const labelText = state.isFaceMode
       ? 'Double-tap to enter Sauce Story'
       : 'Double-tap for Face Filter'
     ecs.Ui.set(world, modeLabel, {text: labelText})
 
+    // Attach DOM listeners once
     if (state.listenerAttached) return
     state.listenerAttached = true
 
