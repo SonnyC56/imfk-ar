@@ -45,7 +45,7 @@
     "nose-bridge-001": {
       "id": "nose-bridge-001",
       "name": "noseBridge",
-      "position": [0, 0, 0],
+      "position": [-1.916234778674137, -0.036883000284433365, 0.62990802526474],
       "rotation": [0, 0, 0, 1],
       "scale": [1, 1, 1],
       "geometry": null,
