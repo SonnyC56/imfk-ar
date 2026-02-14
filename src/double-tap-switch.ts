@@ -13,8 +13,6 @@ ecs.registerComponent({
   },
   add: (world, component) => {
     const {faceSpace, arSpace, modeLabel} = component.schema
-    const eid = component.eid
-
     let lastTapTime = 0
     let isFaceMode = true
     const DOUBLE_TAP_THRESHOLD = 400  // ms
