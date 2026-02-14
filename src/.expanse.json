@@ -446,7 +446,7 @@
       "ui": {
         "width": 200,
         "height": 30,
-        "text": "Double-tap to enter Sauce Story",
+        "text": "Double-tap for Face Filter",
         "color": "#ffffff",
         "fontSize": 12,
         "textAlign": "center",
