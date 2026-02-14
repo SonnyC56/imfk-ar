@@ -144,36 +144,33 @@
 
     console.log('[DEBUG] Console overlay ready — triple-tap top-right or add ?debug to URL');
 
-    // Log ALL fetch requests
+    // Log fetch/XHR requests (skip blobs, data URIs, workers)
+    var skipUrl = function(u) {
+      return !u || u.indexOf('blob:') === 0 || u.indexOf('data:') === 0 || u.indexOf('webpack') !== -1;
+    };
     var origFetch = window.fetch;
     window.fetch = function() {
-      var url = typeof arguments[0] === 'string' ? arguments[0] : (arguments[0] && arguments[0].url || '?');
-      console.log('[FETCH] ' + url);
+      var url = typeof arguments[0] === 'string' ? arguments[0] : (arguments[0] && arguments[0].url || '');
+      if (!skipUrl(url)) console.log('[FETCH] ' + url);
       return origFetch.apply(this, arguments).then(function(resp) {
-        console.log('[FETCH ' + resp.status + '] ' + url);
+        if (!skipUrl(url)) console.log('[FETCH ' + resp.status + '] ' + url);
         return resp;
-      }).catch(function(err) {
-        console.error('[FETCH ERR] ' + url + ' ' + err);
-        throw err;
       });
     };
-
-    // Log ALL XHR requests
     var origOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function(method, url) {
       this._debugUrl = method + ' ' + url;
-      console.log('[XHR] ' + this._debugUrl);
+      this._skip = skipUrl(url);
+      if (!this._skip) console.log('[XHR] ' + this._debugUrl);
       return origOpen.apply(this, arguments);
     };
     var origSend = XMLHttpRequest.prototype.send;
     XMLHttpRequest.prototype.send = function() {
       var self = this;
-      this.addEventListener('load', function() {
-        console.log('[XHR ' + self.status + '] ' + self._debugUrl);
-      });
-      this.addEventListener('error', function() {
-        console.error('[XHR ERR] ' + self._debugUrl);
-      });
+      if (!this._skip) {
+        this.addEventListener('load', function() { console.log('[XHR ' + self.status + '] ' + self._debugUrl); });
+        this.addEventListener('error', function() { console.error('[XHR ERR] ' + self._debugUrl); });
+      }
       return origSend.apply(this, arguments);
     };
   })();
