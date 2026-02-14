@@ -81,6 +81,71 @@
   <div class="loader-tap-prompt">Double-tap to switch between Face &amp; Camera modes</div>
 </div>
 
+<script>
+  // Debug console overlay — triple-tap top-right corner to toggle
+  (function() {
+    var panel = document.createElement('div');
+    panel.id = 'debug-panel';
+    panel.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:50%;z-index:99999;background:rgba(0,0,0,0.88);color:#0f0;font:11px/1.4 monospace;overflow-y:auto;padding:8px;display:none;-webkit-overflow-scrolling:touch;pointer-events:auto;word-break:break-all;';
+    document.body.appendChild(panel);
+
+    var maxLines = 200;
+    var lines = [];
+
+    function addLine(type, args) {
+      var msg = Array.prototype.slice.call(args).map(function(a) {
+        if (a === null) return 'null';
+        if (a === undefined) return 'undefined';
+        if (typeof a === 'object') { try { return JSON.stringify(a, null, 1); } catch(e) { return String(a); } }
+        return String(a);
+      }).join(' ');
+      var colors = {log:'#0f0',warn:'#ff0',error:'#f44',info:'#4af'};
+      lines.push('<div style="color:' + (colors[type]||'#0f0') + ';border-bottom:1px solid #333;padding:2px 0;">[' + type + '] ' + msg.replace(/</g,'&lt;') + '</div>');
+      if (lines.length > maxLines) lines.shift();
+      panel.innerHTML = lines.join('');
+      panel.scrollTop = panel.scrollHeight;
+    }
+
+    // Intercept console methods
+    ['log','warn','error','info'].forEach(function(m) {
+      var orig = console[m].bind(console);
+      console[m] = function() { orig.apply(console, arguments); addLine(m, arguments); };
+    });
+
+    // Catch uncaught errors
+    window.addEventListener('error', function(e) {
+      addLine('error', ['UNCAUGHT: ' + e.message + ' at ' + e.filename + ':' + e.lineno]);
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      addLine('error', ['UNHANDLED PROMISE: ' + (e.reason && e.reason.message || e.reason)]);
+    });
+
+    // Triple-tap top-right to toggle
+    var tapCount = 0, tapTimer = null;
+    document.addEventListener('touchstart', function(e) {
+      var t = e.touches[0];
+      if (t.clientX > window.innerWidth * 0.7 && t.clientY < window.innerHeight * 0.15) {
+        tapCount++;
+        clearTimeout(tapTimer);
+        tapTimer = setTimeout(function() { tapCount = 0; }, 600);
+        if (tapCount >= 3) {
+          tapCount = 0;
+          panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+      } else {
+        tapCount = 0;
+      }
+    }, {passive: true});
+
+    // Also show with ?debug in URL
+    if (window.location.search.indexOf('debug') !== -1) {
+      panel.style.display = 'block';
+    }
+
+    console.log('[DEBUG] Console overlay ready — triple-tap top-right or add ?debug to URL');
+  })();
+</script>
+
 <script src="bundle.js"></script>
 
 <script>
