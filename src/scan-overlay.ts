@@ -71,7 +71,7 @@ ecs.registerComponent({
     const audio = new Audio()
     audio.preload = 'auto'
     audio.src = audioSrc
-    audio.playsInline = true
+    audio.setAttribute('playsinline', '')
 
     let found = false
     let playing = false
