@@ -282,19 +282,7 @@
       "geometry": null,
       "material": null,
       "parentId": "space-ar-camera",
-      "components": {
-        "comp-on-found-001": {
-          "id": "comp-on-found-001",
-          "name": "image-found-handler",
-          "parameters": {
-            "imageTargetName": "Pasta_Label(test)",
-            "tapOverlay": {
-              "type": "entity",
-              "id": "tap-overlay-001"
-            }
-          }
-        }
-      },
+      "components": {},
       "imageTarget": {
         "name": "Pasta_Label(test)"
       },
@@ -397,52 +385,6 @@
         "textAlign": "center"
       },
       "order": 1
-    },
-
-    "tap-overlay-001": {
-      "id": "tap-overlay-001",
-      "name": "Tap Overlay",
-      "position": [0, 0, 0],
-      "rotation": [0, 0, 0, 1],
-      "scale": [1, 1, 1],
-      "geometry": null,
-      "material": null,
-      "parentId": "space-ar-camera",
-      "components": {},
-      "ui": {
-        "type": "overlay",
-        "width": "100%",
-        "height": "100%",
-        "flexDirection": "column",
-        "alignItems": "center",
-        "justifyContent": "center",
-        "background": "#000000",
-        "backgroundOpacity": 0.5
-      },
-      "order": 20,
-      "hidden": true
-    },
-
-    "tap-overlay-text-001": {
-      "id": "tap-overlay-text-001",
-      "name": "Tap Text",
-      "position": [0, 0, 0],
-      "rotation": [0, 0, 0, 1],
-      "scale": [1, 1, 1],
-      "geometry": null,
-      "material": null,
-      "parentId": "tap-overlay-001",
-      "components": {},
-      "ui": {
-        "width": 250,
-        "height": 40,
-        "text": "Tap to enable sound & place model",
-        "color": "#ffffff",
-        "fontSize": 18,
-        "textAlign": "center",
-        "verticalTextAlign": "center"
-      },
-      "order": 0
     },
 
     "mode-switch-entity": {

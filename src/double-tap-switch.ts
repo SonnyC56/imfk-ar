@@ -34,7 +34,7 @@ ecs.registerComponent({
 
     const state = window.__dtState
     const DOUBLE_TAP_THRESHOLD = 400
-    const SWITCH_COOLDOWN = 1500  // ignore taps for 1.5s after switching
+    const SWITCH_COOLDOWN = 1500
 
     // Update label to reflect current state
     const labelText = state.isFaceMode
@@ -46,11 +46,17 @@ ecs.registerComponent({
     if (state.listenerAttached) return
     state.listenerAttached = true
 
-    const onTap = () => {
+    const hasTouchSupport = 'ontouchstart' in window
+
+    const onTap = (e: Event) => {
+      // On touch devices, ignore mousedown (touchstart already fires).
+      // On desktop, ignore touchstart (only mousedown fires).
+      if (hasTouchSupport && e.type === 'mousedown') return
+      if (!hasTouchSupport && e.type === 'touchstart') return
+
       const now = Date.now()
 
       // Ignore taps during cooldown after a space switch
-      // (prevents permission dialog "Allow" tap from triggering a switch back)
       if (now - state.switchedAt < SWITCH_COOLDOWN) {
         state.lastTapTime = 0
         return
