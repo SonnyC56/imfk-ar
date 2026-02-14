@@ -144,37 +144,35 @@
 
     console.log('[DEBUG] Console overlay ready — triple-tap top-right or add ?debug to URL');
 
-    // Intercept fetch to see if XR engine loads image target files
+    // Log ALL fetch requests
     var origFetch = window.fetch;
     window.fetch = function() {
-      var url = arguments[0];
-      if (typeof url === 'string' && (url.indexOf('image-target') !== -1 || url.indexOf('image_target') !== -1 || url.indexOf('target') !== -1)) {
-        console.log('[FETCH] ' + url);
-      }
+      var url = typeof arguments[0] === 'string' ? arguments[0] : (arguments[0] && arguments[0].url || '?');
+      console.log('[FETCH] ' + url);
       return origFetch.apply(this, arguments).then(function(resp) {
-        if (typeof url === 'string' && (url.indexOf('image-target') !== -1 || url.indexOf('image_target') !== -1 || url.indexOf('target') !== -1)) {
-          console.log('[FETCH RESULT] ' + url + ' -> ' + resp.status);
-        }
+        console.log('[FETCH ' + resp.status + '] ' + url);
         return resp;
+      }).catch(function(err) {
+        console.error('[FETCH ERR] ' + url + ' ' + err);
+        throw err;
       });
     };
 
-    // Intercept XMLHttpRequest too
+    // Log ALL XHR requests
     var origOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function(method, url) {
-      this._debugUrl = url;
-      if (typeof url === 'string' && (url.indexOf('image-target') !== -1 || url.indexOf('image_target') !== -1 || url.indexOf('target') !== -1)) {
-        console.log('[XHR] ' + method + ' ' + url);
-      }
+      this._debugUrl = method + ' ' + url;
+      console.log('[XHR] ' + this._debugUrl);
       return origOpen.apply(this, arguments);
     };
     var origSend = XMLHttpRequest.prototype.send;
     XMLHttpRequest.prototype.send = function() {
       var self = this;
       this.addEventListener('load', function() {
-        if (typeof self._debugUrl === 'string' && (self._debugUrl.indexOf('image-target') !== -1 || self._debugUrl.indexOf('image_target') !== -1 || self._debugUrl.indexOf('target') !== -1)) {
-          console.log('[XHR RESULT] ' + self._debugUrl + ' -> ' + self.status);
-        }
+        console.log('[XHR ' + self.status + '] ' + self._debugUrl);
+      });
+      this.addEventListener('error', function() {
+        console.error('[XHR ERR] ' + self._debugUrl);
       });
       return origSend.apply(this, arguments);
     };
