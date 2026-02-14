@@ -5,18 +5,26 @@ ecs.registerComponent({
   schema: {
     url: ecs.string,
   },
-  stateMachine: ({world, eid, schemaAttribute}) => {
-    ecs.defineState('idle')
-      .initial()
-      .onEvent(ecs.input.UI_CLICK, 'opening', {target: eid})
+  add: (world, component) => {
+    const {url} = component.schema
+    const eid = component.eid
 
-    ecs.defineState('opening')
-      .onEnter(() => {
-        const {url} = schemaAttribute.get(eid)
-        if (url) {
-          window.open(url, '_blank')
-        }
-      })
-      .onEvent(ecs.input.UI_CLICK, 'opening', {target: eid})
+    // Use direct DOM touch/click to preserve user gesture chain for Safari
+    const handler = () => {
+      // For Safari compatibility, navigate via an anchor element click
+      if (url) {
+        const a = document.createElement('a')
+        a.href = url
+        a.target = '_blank'
+        a.rel = 'noopener noreferrer'
+        a.style.display = 'none'
+        document.body.appendChild(a)
+        a.click()
+        setTimeout(() => a.remove(), 100)
+      }
+    }
+
+    // Listen for ECS UI_CLICK on this entity via world events
+    world.events.addListener(eid, ecs.input.UI_CLICK, handler)
   },
 })

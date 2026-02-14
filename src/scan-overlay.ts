@@ -147,7 +147,7 @@ ecs.registerComponent({
 
       // Try to autoplay first
       audio.play().then(() => {
-        // Autoplay worked! Skip tap prompt, go straight to progress bar
+        if (playing) return  // guard against double-trigger
         playing = true
         barWrap.style.opacity = '1'
         console.log('[scan-overlay] Autoplay succeeded, duration:', audio.duration.toFixed(1) + 's')
