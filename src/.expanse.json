@@ -282,9 +282,25 @@
       "geometry": null,
       "material": null,
       "parentId": "space-ar-camera",
-      "components": {},
+      "components": {
+        "comp-found-audio": {
+          "id": "comp-found-audio",
+          "name": "image-found-audio",
+          "parameters": {
+            "imageTargetName": "Pasta_Label(test)"
+          }
+        }
+      },
       "imageTarget": {
         "name": "Pasta_Label(test)"
+      },
+      "audio": {
+        "src": {
+          "type": "asset",
+          "asset": "assets/Music-VO_v1.mp3"
+        },
+        "loop": false,
+        "paused": true
       },
       "order": 3,
       "persistent": true
@@ -382,34 +398,6 @@
         "textAlign": "center"
       },
       "order": 1,
-      "persistent": true
-    },
-
-    "bg-music-001": {
-      "id": "bg-music-001",
-      "name": "Background Music",
-      "position": [0, 0, 0],
-      "rotation": [0, 0, 0, 1],
-      "scale": [1, 1, 1],
-      "geometry": null,
-      "material": null,
-      "parentId": "space-face-filter",
-      "components": {
-        "comp-bg-music": {
-          "id": "comp-bg-music",
-          "name": "bg-music",
-          "parameters": {}
-        }
-      },
-      "audio": {
-        "src": {
-          "type": "asset",
-          "asset": "assets/The_Joy_of_It_All.mp3"
-        },
-        "loop": true,
-        "volume": 0.5
-      },
-      "order": -5,
       "persistent": true
     },
 
